@@ -1,0 +1,338 @@
+<odoo>
+    <template id="portal_check_request_status" name="Portal My Home : DealerShip Request Status"
+              inherit_id="portal.portal_my_home">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <div class="o_portal_docs">
+                <div class="box" style="cursor: pointer; width: 420px; height: 100px;
+            background-color: #d7f1ff; color: black; border-radius: 8px; padding: 10px;">
+                    <a t-att-href="'/request/status'" style="display: block; text-decoration: none; color: black;">
+                        <div class="o_portal_doc">
+                            <h4 style="color: #4a3f41; font-family: 'Playfair Display', serif; font-weight: 700; display: flex; align-items: center;">
+                                Request Status
+                                <img src="/DMS_Portal/static/src/img/In_icon.png" alt="Check-in Icon"
+                                     style="width: 40px; height: 40px; margin-left: 35px;"/>
+                            </h4>
+
+                            <t t-set="count"
+                               t-value="request.env['dms.portal'].sudo().search_count([('state','=','approved')])"/>
+
+                            <p style="font-family: 'Playfair Display', serif; font-size: 14px; color: #333;">
+                                <span style="font-weight: 500; color: #6c5b5f; text-align: center;">Approved
+                                    Requests</span><br/>
+                                <span><strong style="font-size: 15px; font-weight: 700; color: #5a2d31;"><t
+                                        t-esc="count"/></strong></span>
+                            </p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="dms_portal_request_status" name="Request Status">
+        <t t-call="website.layout">
+            <div style="font-family: 'Poppins', sans-serif; background-color: #f8fafc; min-height: 100vh; padding: 0; margin: 0;">
+                <!-- Set Dynamic Background Image for Banner Only -->
+                <t t-set="banner_image" t-value="'/DMS_Portal/static/src/img/track.png'"/>
+
+                <div class="custom-banner">
+                    <div class="banner-overlay">
+                    </div>
+                </div>
+
+                <style>
+                    body {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    }
+
+                    .custom-banner {
+                    position: relative;
+                    width: 100vw; /* use viewport width */
+                    height: 400px;
+                    background: url('<t t-esc="banner_image"/>') no-repeat center center;
+                    background-size: cover;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    text-align: center;
+                    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+                    }
+
+                    .o_container, .container, .o_main {
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    max-width: 100% !important;
+                    }
+                </style>
+
+
+                <!-- Track Input -->
+                <div style="display: flex; justify-content: center; padding: 40px 0; background-color: #f1f5f9;">
+
+                    <form action="/request/status" method="get"
+                          style="display: flex; align-items: center; gap: 20px; background-color: white; padding: 15px 30px; border-radius: 50px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                        <label for="application_id" style="font-size: 1.2rem; color: #1f2937; font-weight: 600;">
+                            Application
+                            Number:</label>
+                        <input type="number" name="application_id" id="application_id"
+                               style="padding: 12px; border: 2px solid #e2e8f0; border-radius: 10px; width: 220px; font-size: 1rem; transition: border-color 0.3s;"
+                               onfocus="this.style.borderColor='#3b82f6';" onblur="this.style.borderColor='#e2e8f0';"
+                               placeholder="Enter here" required="required"/>
+                        <button type="submit"
+                                style="background: linear-gradient(90deg, #1e3a8a, #3b82f6); color: white; padding: 12px 30px; border: none; border-radius: 50px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: transform 0.2s, box-shadow 0.3s;"
+                                onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 12px rgba(0,0,0,0.2)';"
+                                onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none';">
+                            Track</button>
+                    </form>
+                </div>
+
+                <!-- Modern Status Bar -->
+                <t t-if="data and data[0]">
+                    <div style="margin: 40px auto; max-width: 800px; padding: 0 20px;">
+                        <div class="luxury-tab-nav">
+                            <div class="luxury-tab-button"
+                                 t-att-class="'luxury-tab-button active' if data[0].get('state') == 'submitted' else 'luxury-tab-button'">
+                                <span class="button-text">Submitted</span>
+                            </div>
+                            <div class="luxury-tab-button"
+                                 t-att-class="'luxury-tab-button active' if data[0].get('state') == 'under_review' else 'luxury-tab-button'">
+                                <span class="button-text">Under Review</span>
+                            </div>
+                            <div class="luxury-tab-button"
+                                 t-att-class="'luxury-tab-button active' if data[0].get('state') == 'approved' else 'luxury-tab-button'">
+                                <span class="button-text">Approved</span>
+                            </div>
+                            <div class="luxury-tab-button"
+                                 t-att-class="'luxury-tab-button active' if data[0].get('state') == 'rejected' else 'luxury-tab-button'">
+                                <span class="button-text">Rejected</span>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <style>
+                        .luxury-tab-nav {
+                            display: flex;
+                            justify-content: space-between;
+                            margin-bottom: 30px;
+                            background: rgb(0, 0, 0);
+                            border-radius: 20px;
+                            padding: 12px 16px;
+                            box-shadow: 0 10px 30px rgba(88, 28, 135, 0.25), 0 4px 8px rgba(15, 15, 25, 0.3);
+                            backdrop-filter: blur(10px);
+                            border: 1px solid rgba(139, 92, 246, 0.2);
+                        }
+
+                        .luxury-tab-button {
+                            background: #ffffff;
+                            padding: 10px 15px;
+                            font-size: 17px;
+                            font-weight: 600;
+                            border-radius: 16px;
+                            cursor: pointer;
+                            flex: 1;
+                            margin: 0 8px;
+                            text-align: center;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            position: relative;
+                            overflow: hidden;
+                            letter-spacing: 0.5px;
+                            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+                            min-height: 50px;
+                            justify-content: center;
+                            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                        }
+
+                        .luxury-tab-button.active {
+                            background-color: #90ee90; /* or any highlight color */
+                            color: #ffffff;
+                            border: 2px solid #2980b9;
+                            font-weight: bold;
+                        }
+
+
+                        .button-text {
+                            font-size: 18px;
+                            letter-spacing: 0.6px;
+                            font-weight: 600;
+                            color: #000;
+                        }
+
+                        .luxury-tab-button.active .button-text {
+                            text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
+                        }
+                    </style>
+
+
+                    <!-- Table Structure for Details -->
+                    <div style="display: flex; justify-content: center; padding: 40px 20px;">
+                        <div style="width: 95%; max-width: 1100px; background-color: white; border-radius: 15px; box-shadow: 0 6px 15px rgba(0,0,0,0.1); overflow: hidden;">
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr style="background: linear-gradient(90deg, #2b6cb0, #60a5fa); color: white;">
+                                        <th style="padding: 18px; text-align: left; font-weight: 600; font-size: 1.1rem; border-bottom: 2px solid #e5e7eb;">
+                                            Field</th>
+                                        <th style="padding: 18px; text-align: left; font-weight: 600; font-size: 1.1rem; border-bottom: 2px solid #e5e7eb;">
+                                            Details</th>
+                                        <th style="padding: 18px; text-align: left; font-weight: 600; font-size: 1.1rem; border-bottom: 2px solid #e5e7eb;">
+                                            Field</th>
+                                        <th style="padding: 18px; text-align: left; font-weight: 600; font-size: 1.1rem; border-bottom: 2px solid #e5e7eb;">
+                                            Details</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">First Name</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('first_name')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Last Name</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('last_name')"/>
+                                    </tr>
+
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Email</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('email_id')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Date of Birth</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('date_of_birth')"/>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Phone No</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('phone_no')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Mobile No</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('mobile_no')"/>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Location</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('location')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Location 2</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('location2')"/>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">City</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('city')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Pincode</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('pincode')"/>
+                                    </tr>
+
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Country</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('country_id')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Province</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('province')"/>
+                                    </tr>
+
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Qualification</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('qualification')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Current
+                                            Occupation</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('current_occupation')"/>
+                                    </tr>
+
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Dealer Vacancy
+                                            Known
+                                            Through</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('dealer_vacancy_known_through')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Advertisement
+                                            Code</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('code')"/>
+                                    </tr>
+
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Advertisement
+                                            Boolean</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('advertisement_boolean')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Company Name</td>
+                                        <td style="padding: 15px; color: #1f2937;" t-esc="data[0].get('company_name')"/>
+                                    </tr>
+
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Business Type</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('business_type')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Contact Person
+                                            Name</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('contact_person_name')"/>
+                                    </tr>
+
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Business Email</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('business_email')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Business Phone</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('business_phone')"/>
+                                    </tr>
+
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Business
+                                            Address</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('business_address')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Existing
+                                            Dealership</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('existing_dealership')"/>
+                                    </tr>
+
+                                    <tr style="border-bottom: 1px solid #e5e7eb; transition: background-color 0.3s;"
+                                        onmouseover="this.style.backgroundColor='#f1f5f9';"
+                                        onmouseout="this.style.backgroundColor='white';">
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Infrastructure
+                                            Detail</td>
+                                        <td style="padding: 15px; color: #1f2937;"
+                                            t-esc="data[0].get('infrastructure_detail')"/>
+                                        <td style="padding: 15px; color: #4b5563; font-weight: 500;">Business Staff
+                                            Count</td>
+                                        <td style="padding: 15px;  color: #1f2937;"
+                                            t-esc="data[0].get('business_staff_count')"/>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </t>
+                <t t-else="">
+                    <div style="text-align: center; padding: 40px; color: #6b7280; font-size: 1.2rem; font-weight: 500;">
+                        <p>No data found</p>
+                    </div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>
