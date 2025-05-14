@@ -1,5 +1,4 @@
 # hrl_dealership_management_system
 
 ### DMS_Portal
-developed the portal for dealership management system where any person want to become partner can apply for dealership with detailed info from name to upto max capital he can invest in specific location.
-once submitted , tracking id is displayed to user and admin can approve or reject the application , if approve it creates the partner for that request and user can track his application status by using portal , where state and some other required info is displayed to him. 
+developed the portal for dealership management system, enables individuals to apply for a dealership partnership by providing detailed information, including personal details, contact , location , and investment capacity. Upon submission, system generates  tracking ID for the user to monitor status via portal. portal displays the application state  along with relevant details. Adminis can review applications, approve, or reject them. Upon approval, the system automatically creates a partner record for the approved request.
